@@ -47,3 +47,49 @@ export function formatNumber(num: number | null | undefined): string {
   if (num === null || num === undefined || isNaN(num)) return "0";
   return num.toLocaleString("en-IN");
 }
+
+/**
+ * Formats college / institution names for selection dropdowns in Issue, Return, Catalogue, etc.
+ * Formats:
+ * - RBCET -> RBCET(Rakshpal Bahadur College of Engineering and Technology)
+ * - RBMI  -> RBMI(Rakshpal Bahadur Management Institute)
+ * - RBCN  -> RBCN(Rakshpal Bahadur College of Nursing)
+ * - RBCP  -> RBCP(Rakshpal Bahadur College of Pharmacy)
+ * - RBTTI -> RBTTI
+ */
+export function getCollegeDropdownLabel(inst: {
+  id?: number;
+  code?: string | null;
+  name?: string | null;
+}): string {
+  const code = (inst.code || "").toUpperCase().trim();
+  const name = (inst.name || "").toUpperCase().trim();
+
+  if (code === "RBCET" || code === "RBMI-ENG" || name.includes("ENGINEERING")) {
+    return "RBCET(Rakshpal Bahadur College of Engineering and Technology)";
+  }
+  if (
+    code === "RBMI" ||
+    code === "RBMI-MGMT" ||
+    name.includes("MANAGEMENT") ||
+    name.includes("BUSINESS")
+  ) {
+    return "RBMI(Rakshpal Bahadur Management Institute)";
+  }
+  if (code === "RBCN" || code === "RBMI-NURS" || name.includes("NURSING")) {
+    return "RBCN(Rakshpal Bahadur College of Nursing)";
+  }
+  if (code === "RBCP" || code === "RBMI-PHARM" || name.includes("PHARMACY")) {
+    return "RBCP(Rakshpal Bahadur College of Pharmacy)";
+  }
+  if (
+    code === "RBTTI" ||
+    code === "RBMI-TECH" ||
+    name.includes("TEACHER") ||
+    name.includes("TRAINING")
+  ) {
+    return "RBTTI";
+  }
+
+  return inst.name ? (code ? `${code}(${inst.name})` : inst.name) : code;
+}

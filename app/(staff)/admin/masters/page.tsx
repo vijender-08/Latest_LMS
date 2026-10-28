@@ -94,7 +94,7 @@ export default async function AdminMastersPage() {
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-slate-900">Patron Categories</h3>
-            <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-bold text-purple-700">
+            <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-bold text-indigo-700">
               {categories.length}
             </span>
           </div>

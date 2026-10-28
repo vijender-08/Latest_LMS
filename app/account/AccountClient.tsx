@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/Table";
 import { formatDate } from "@/lib/utils";
 import type { PatronAccountData } from "@/services/opac";
+import { LibraryCardModal, derivePatronBatch } from "@/components/patrons/LibraryCard";
 
 interface AccountClientProps {
   accountData: PatronAccountData | null;
@@ -30,6 +31,7 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
     "loans",
   );
   const [loggingOut, setLoggingOut] = useState(false);
+  const [showCardModal, setShowCardModal] = useState(false);
 
   // Password change state
   const [currentPassword, setCurrentPassword] = useState("");
@@ -268,14 +270,24 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="w-full sm:w-auto text-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-red-50 hover:text-red-700 transition"
-          >
-            {loggingOut ? "Signing out..." : "Sign Out"}
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCardModal(true)}
+              className="w-full sm:w-auto text-center rounded-md bg-blue-900 hover:bg-blue-800 px-3.5 py-2 text-xs font-bold text-white shadow-xs transition inline-flex items-center justify-center space-x-1.5 cursor-pointer"
+            >
+              <span>🪪</span>
+              <span>Print Library Card</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="w-full sm:w-auto text-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-red-50 hover:text-red-700 transition cursor-pointer"
+            >
+              {loggingOut ? "Signing out..." : "Sign Out"}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -381,7 +393,9 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
                             : "bg-emerald-100 text-emerald-800"
                         }`}
                       >
-                        {loan.isOverdue ? `${loan.daysOverdue}d overdue` : `${loan.daysRemaining}d left`}
+                        {loan.isOverdue
+                          ? `${loan.daysOverdue}d overdue`
+                          : `${loan.daysRemaining}d left`}
                       </span>
                     </div>
 
@@ -462,7 +476,9 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
                           ) : (
                             <span className="text-slate-800">
                               {formatDate(loan.dueDate)}{" "}
-                              <span className="text-slate-400">({loan.daysRemaining} days left)</span>
+                              <span className="text-slate-400">
+                                ({loan.daysRemaining} days left)
+                              </span>
                             </span>
                           )}
                         </TableCell>
@@ -674,7 +690,9 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
                           Pickup Deadline
                         </span>
                         <span className="font-medium text-slate-700">
-                          {hold.pickupExpiryDate ? formatDate(hold.pickupExpiryDate) : "Pending return"}
+                          {hold.pickupExpiryDate
+                            ? formatDate(hold.pickupExpiryDate)
+                            : "Pending return"}
                         </span>
                       </div>
                       {hold.isCancellable && (
@@ -738,7 +756,9 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
                           </span>
                         </TableCell>
                         <TableCell className="text-xs text-slate-600">
-                          {hold.pickupExpiryDate ? formatDate(hold.pickupExpiryDate) : "Pending return"}
+                          {hold.pickupExpiryDate
+                            ? formatDate(hold.pickupExpiryDate)
+                            : "Pending return"}
                         </TableCell>
                         <TableCell>
                           {hold.isCancellable ? (
@@ -781,8 +801,8 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
             </div>
             {totalOutstandingFines > 0 && (
               <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-xs text-red-800 font-medium">
-                Note: Outstanding fines exceeding institutional limits block book issues and renewals
-                (BR-08).
+                Note: Outstanding fines exceeding institutional limits block book issues and
+                renewals (BR-08).
               </div>
             )}
           </div>
@@ -825,7 +845,9 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
                           <span className="text-slate-400 block text-[9px] uppercase font-semibold">
                             Total
                           </span>
-                          <span className="font-mono text-slate-800 font-semibold">₹{fine.amount}</span>
+                          <span className="font-mono text-slate-800 font-semibold">
+                            ₹{fine.amount}
+                          </span>
                         </div>
                         <div>
                           <span className="text-slate-400 block text-[9px] uppercase font-semibold">
@@ -837,7 +859,9 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
                           <span className="text-slate-400 block text-[9px] uppercase font-semibold">
                             Remaining
                           </span>
-                          <span className="font-mono font-bold text-slate-900">₹{fine.balance}</span>
+                          <span className="font-mono font-bold text-slate-900">
+                            ₹{fine.balance}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -860,7 +884,9 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
                     <TableBody>
                       {fines.map((fine) => (
                         <TableRow key={fine.id}>
-                          <TableCell className="font-semibold text-slate-900">{fine.reason}</TableCell>
+                          <TableCell className="font-semibold text-slate-900">
+                            {fine.reason}
+                          </TableCell>
                           <TableCell className="text-xs text-slate-600">
                             {formatDate(fine.createdAt)}
                           </TableCell>
@@ -941,7 +967,12 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
             />
 
             <div className="pt-2">
-              <Button type="submit" variant="primary" className="w-full sm:w-auto" isLoading={passwordLoading}>
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full sm:w-auto"
+                isLoading={passwordLoading}
+              >
                 Update Password
               </Button>
             </div>
@@ -962,6 +993,35 @@ export function AccountClient({ accountData, csrfToken }: AccountClientProps) {
           onCancel={() => setCancelHoldTarget(null)}
         />
       )}
+      {/* Printable Library Card Modal */}
+      <LibraryCardModal
+        open={showCardModal}
+        onClose={() => setShowCardModal(false)}
+        title={`Student Library Card — ${profile.fullName}`}
+        cards={[
+          {
+            cardNo: profile.cardNo,
+            name: profile.fullName,
+            fatherName: profile.fatherName,
+            department: profile.departmentName,
+            mobile: profile.mobile,
+            batch: derivePatronBatch({
+              academicYear: profile.academicYear,
+              semester: profile.semester,
+              admissionDate: profile.admissionDate,
+              cardNo: profile.cardNo,
+            }),
+            libraryName: profile.libraryName || "Central Library",
+            institutionName: profile.institutionName,
+            courseName: profile.courseName,
+            cardExpiry: profile.cardExpiry,
+            patronType: profile.patronType,
+            academicYear: profile.academicYear,
+            semester: profile.semester,
+            admissionDate: profile.admissionDate,
+          },
+        ]}
+      />
     </div>
   );
 }

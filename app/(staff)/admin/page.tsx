@@ -160,7 +160,7 @@ export default async function AdminPortalPage() {
         title="Administration & System Configuration"
         description="Central administrative control panel for policy enforcement, access governance, and master data."
         badge="System Administration"
-        badgeColor="purple"
+        badgeColor="indigo"
         breadcrumbs={[{ label: "Overview" }, { label: "Admin Portal" }]}
       />
 
@@ -217,7 +217,7 @@ export default async function AdminPortalPage() {
           <div className="mt-2 text-2xl font-bold text-slate-900">
             {totalAuditEvents.toLocaleString()}
           </div>
-          <div className="mt-1 text-[11px] text-purple-600 font-medium">Audit log events</div>
+          <div className="mt-1 text-[11px] text-indigo-600 font-medium">Audit log events</div>
         </div>
       </div>
 

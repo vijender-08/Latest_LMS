@@ -41,7 +41,7 @@ export default async function ImportFormatsPage() {
         title="Bulk Import Format Configuration"
         description="Configure expected CSV/Excel headers, manage required and optional attributes, and control mapping to database records."
         badge="System Administration"
-        badgeColor="purple"
+        badgeColor="indigo"
         breadcrumbs={[{ label: "Admin Portal", href: "/admin" }, { label: "Import Formats" }]}
         actions={
           <div className="flex items-center gap-2">

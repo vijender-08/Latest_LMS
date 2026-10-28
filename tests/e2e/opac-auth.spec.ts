@@ -36,8 +36,8 @@ test.describe("Patron Authentication & Account Portal (FR-AU-05, FR-OP-02, T-20)
     // Verify success alert
     await expect(page.locator("text=Your password has been changed successfully")).toBeVisible();
 
-    // Sign out
-    await page.click('button:has-text("Sign Out")');
+    // Sign out (via header or account card)
+    await page.locator('button:has-text("Sign Out")').first().click();
     await expect(page).toHaveURL("/login");
 
     // Subsequent login: old password refused (T-20)

@@ -300,12 +300,12 @@ export function AdminHolidayCalendarClient({
           <span className="text-[11px] text-amber-700 font-medium">Emergency closures</span>
         </div>
 
-        <div className="rounded-xl border border-purple-200 bg-purple-50/50 p-4 shadow-xs">
-          <span className="text-xs text-purple-700 font-medium">Next Holiday</span>
-          <div className="mt-1 text-sm font-bold text-purple-900 truncate">
+        <div className="rounded-xl border border-indigo-200 bg-indigo-50/50 p-4 shadow-xs">
+          <span className="text-xs text-indigo-700 font-medium">Next Holiday</span>
+          <div className="mt-1 text-sm font-bold text-indigo-950 truncate">
             {nextHoliday ? nextHoliday.name : "None upcoming"}
           </div>
-          <span className="text-[11px] text-purple-600 font-mono">
+          <span className="text-[11px] text-indigo-600 font-mono">
             {nextHoliday ? nextHoliday.date : "—"}
           </span>
         </div>

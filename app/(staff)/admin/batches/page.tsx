@@ -85,7 +85,7 @@ export default async function BatchManagementPage() {
         title="Data Cleanup & Batch Management"
         description="Roll back wrong or mistaken CSV file uploads, delete unnecessary test records, or remove particular student/faculty profiles."
         badge="Data Governance"
-        badgeColor="purple"
+        badgeColor="indigo"
         breadcrumbs={[
           { label: "Admin Portal", href: "/admin" },
           { label: "Data Cleanup & Batches" },

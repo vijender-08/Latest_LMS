@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { generateDepartmentBarcode, getDepartmentBarcodePrefix } from "@/lib/department-barcodes";
+import { getCollegeDropdownLabel } from "@/lib/utils";
 import { ITEM_STATUSES, type ItemStatus } from "@/lib/validations/catalogue";
 
 export interface CatalogueTitleItem {
@@ -325,7 +326,16 @@ export function CatalogueClient({
   const handleCollegeChange = (newCollegeId: string) => {
     setSelectedCollegeId(newCollegeId);
     setSelectedDeptId("");
-    fetchTitles(1, searchTerm, newCollegeId, "", selectedTypeFilter, pageSize, viewMode, activeLibFilter);
+    fetchTitles(
+      1,
+      searchTerm,
+      newCollegeId,
+      "",
+      selectedTypeFilter,
+      pageSize,
+      viewMode,
+      activeLibFilter,
+    );
   };
 
   // Department dropdown change handler
@@ -832,10 +842,10 @@ export function CatalogueClient({
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
         {/* Super Admin Multi-Library Toggle Pills */}
         {isSuperAdmin && (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-purple-50/50 border border-purple-200 rounded-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-indigo-50/50 border border-indigo-200 rounded-xl">
             <div className="flex items-center gap-2">
-              <span className="flex h-2.5 w-2.5 rounded-full bg-purple-600 animate-pulse" />
-              <span className="text-xs font-bold uppercase tracking-wider text-purple-900">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-indigo-600 animate-pulse" />
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-950">
                 Filter by Library Branch:
               </span>
             </div>
@@ -845,7 +855,7 @@ export function CatalogueClient({
                 onClick={() => handleLibraryChange("")}
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition border flex items-center gap-1.5 ${
                   !activeLibFilter
-                    ? "bg-purple-900 text-white border-purple-900 shadow-xs"
+                    ? "bg-indigo-900 text-white border-indigo-950 shadow-xs"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
                 }`}
               >
@@ -964,7 +974,7 @@ export function CatalogueClient({
                 { value: "", label: "All Colleges (RBMI Group)" },
                 ...institutions.map((inst) => ({
                   value: String(inst.id),
-                  label: `${inst.code} — ${inst.name}`,
+                  label: getCollegeDropdownLabel(inst),
                 })),
               ]}
             />
@@ -1958,7 +1968,7 @@ export function CatalogueClient({
                                 : copy.status === "ISSUED"
                                   ? "bg-blue-100 text-blue-800"
                                   : copy.status === "REFERENCE_ONLY"
-                                    ? "bg-purple-100 text-purple-800"
+                                    ? "bg-indigo-100 text-indigo-800"
                                     : "bg-amber-100 text-amber-800"
                             }`}
                           >

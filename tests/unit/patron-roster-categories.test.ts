@@ -11,16 +11,18 @@ import { isBTechCourse, isDiplomaCourse } from "@/services/patron-import";
 
 describe("Unit: Patron Roster Categorization & Resolution", () => {
   it("defines the exact official 5 colleges and their default programs", () => {
-    expect(COLLEGE_CONFIGS.RBCET.fullName).toBe("RBMI College of Engineering and Technology");
+    expect(COLLEGE_CONFIGS.RBCET.fullName).toBe(
+      "Rakshpal Bahadur College of Engineering and Technology",
+    );
     expect(COLLEGE_CONFIGS.RBCET.defaultCourses).toEqual(["B.Tech", "Diploma / Polytechnic"]);
 
-    expect(COLLEGE_CONFIGS.RBCP.fullName).toBe("RBMI College of Pharmacy");
+    expect(COLLEGE_CONFIGS.RBCP.fullName).toBe("Rakshpal Bahadur College of Pharmacy");
     expect(COLLEGE_CONFIGS.RBCP.defaultCourses).toEqual(["B.Pharm", "D.Pharm"]);
 
-    expect(COLLEGE_CONFIGS.RBCN.fullName).toBe("RBMI College of Nursing");
+    expect(COLLEGE_CONFIGS.RBCN.fullName).toBe("Rakshpal Bahadur College of Nursing");
     expect(COLLEGE_CONFIGS.RBCN.defaultCourses).toEqual(["B.Sc Nursing"]);
 
-    expect(COLLEGE_CONFIGS.RBMI.fullName).toBe("RBMI Business School");
+    expect(COLLEGE_CONFIGS.RBMI.fullName).toBe("Rakshpal Bahadur Management Institute");
     expect(COLLEGE_CONFIGS.RBMI.defaultCourses).toEqual([
       "MBA",
       "BBA",

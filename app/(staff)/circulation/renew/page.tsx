@@ -35,7 +35,7 @@ export default async function RenewPage() {
         title="Book Renewal Terminal"
         description="Renew active borrowed materials. Enforces maximum renewal counts, overdue blocks, and reservation holds."
         badge="Renewal Desk"
-        badgeColor="purple"
+        badgeColor="indigo"
         breadcrumbs={[{ label: "Circulation", href: "/circulation" }, { label: "Book Renewal" }]}
       />
 

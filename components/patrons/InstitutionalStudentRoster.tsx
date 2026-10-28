@@ -57,7 +57,7 @@ export const COLLEGE_CONFIGS: Record<string, CollegeInfo> = {
   RBCET: {
     code: "RBCET",
     shortName: "RBCET",
-    fullName: "RBMI College of Engineering and Technology",
+    fullName: "Rakshpal Bahadur College of Engineering and Technology",
     badge: "bg-blue-100 text-blue-900 border-blue-200",
     border: "border-blue-400",
     bgLight: "bg-blue-50/60",
@@ -67,7 +67,7 @@ export const COLLEGE_CONFIGS: Record<string, CollegeInfo> = {
   RBCP: {
     code: "RBCP",
     shortName: "RBCP",
-    fullName: "RBMI College of Pharmacy",
+    fullName: "Rakshpal Bahadur College of Pharmacy",
     badge: "bg-emerald-100 text-emerald-900 border-emerald-200",
     border: "border-emerald-400",
     bgLight: "bg-emerald-50/60",
@@ -77,7 +77,7 @@ export const COLLEGE_CONFIGS: Record<string, CollegeInfo> = {
   RBCN: {
     code: "RBCN",
     shortName: "RBCN",
-    fullName: "RBMI College of Nursing",
+    fullName: "Rakshpal Bahadur College of Nursing",
     badge: "bg-rose-100 text-rose-900 border-rose-200",
     border: "border-rose-400",
     bgLight: "bg-rose-50/60",
@@ -87,7 +87,7 @@ export const COLLEGE_CONFIGS: Record<string, CollegeInfo> = {
   RBMI: {
     code: "RBMI",
     shortName: "RBMI",
-    fullName: "RBMI Business School",
+    fullName: "Rakshpal Bahadur Management Institute",
     badge: "bg-amber-100 text-amber-900 border-amber-200",
     border: "border-amber-400",
     bgLight: "bg-amber-50/60",
@@ -98,9 +98,9 @@ export const COLLEGE_CONFIGS: Record<string, CollegeInfo> = {
     code: "RBTTI",
     shortName: "RBTTI",
     fullName: "Rakshpal Bahadur Teachers Training Institute",
-    badge: "bg-purple-100 text-purple-900 border-purple-200",
-    border: "border-purple-400",
-    bgLight: "bg-purple-50/60",
+    badge: "bg-teal-100 text-teal-900 border-teal-200",
+    border: "border-teal-400",
+    bgLight: "bg-teal-50/60",
     icon: "🎓",
     defaultCourses: ["B.Ed"],
   },
@@ -904,7 +904,11 @@ export function InstitutionalStudentRoster({
                                           size="sm"
                                           onClick={(e) => {
                                             e.stopPropagation();
-                                            setDeleteStudentModal({ open: true, student, force: false });
+                                            setDeleteStudentModal({
+                                              open: true,
+                                              student,
+                                              force: false,
+                                            });
                                           }}
                                           title="Delete this student record"
                                         >
@@ -1144,7 +1148,10 @@ export function InstitutionalStudentRoster({
                   Are you sure you want to permanently delete student{" "}
                   <strong className="text-slate-900">{deleteStudentModal.student.fullName}</strong>{" "}
                   (Card:{" "}
-                  <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">{deleteStudentModal.student.cardNo}</code>)?
+                  <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">
+                    {deleteStudentModal.student.cardNo}
+                  </code>
+                  )?
                 </p>
               </div>
             </div>
@@ -1182,11 +1189,7 @@ export function InstitutionalStudentRoster({
               >
                 Cancel
               </Button>
-              <Button
-                variant="danger"
-                onClick={handleConfirmDeleteStudent}
-                isLoading={isDeleting}
-              >
+              <Button variant="danger" onClick={handleConfirmDeleteStudent} isLoading={isDeleting}>
                 Yes, Delete Student
               </Button>
             </div>

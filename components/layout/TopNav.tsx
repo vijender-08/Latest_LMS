@@ -24,7 +24,7 @@ interface TopNavProps {
 }
 
 const roleBadgeColors: Record<string, string> = {
-  SUPER_ADMIN: "bg-purple-100 text-purple-800 border-purple-200",
+  SUPER_ADMIN: "bg-indigo-900 text-white border-indigo-950",
   LIBRARY_ADMIN: "bg-indigo-100 text-indigo-800 border-indigo-200",
   LIBRARIAN: "bg-blue-100 text-blue-800 border-blue-200",
   ASSISTANT_LIBRARIAN: "bg-slate-100 text-slate-800 border-slate-200",
@@ -120,7 +120,12 @@ export function TopNav({
             className="md:hidden flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 transition"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
         )}
@@ -135,7 +140,7 @@ export function TopNav({
             {libraryName}
           </span>
           {isSuperAdmin && libraries.length > 0 && (
-            <span className="hidden sm:inline-flex rounded bg-purple-50 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold text-purple-700 border border-purple-200">
+            <span className="hidden sm:inline-flex rounded bg-indigo-50 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold text-indigo-700 border border-indigo-200">
               4 Libraries
             </span>
           )}
@@ -194,7 +199,9 @@ export function TopNav({
         {/* User Profile Pill */}
         <div className="flex items-center space-x-1.5 sm:space-x-2 border-l border-slate-200 pl-2 sm:pl-3">
           <div className="text-right hidden sm:block">
-            <div className="text-xs font-bold text-slate-900 truncate max-w-[120px]">{userName}</div>
+            <div className="text-xs font-bold text-slate-900 truncate max-w-[120px]">
+              {userName}
+            </div>
             <div className="text-[10px] text-slate-500 truncate max-w-[120px]">{userRole}</div>
           </div>
           <span

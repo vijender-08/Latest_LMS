@@ -1,16 +1,29 @@
 import { PublicFooter, PublicHeader } from "@/components/layout/PublicHeader";
 import { env } from "@/config/env";
 import { checkDatabaseConnection } from "@/db/client";
+import { getCurrentSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function HealthPage() {
   const uptimeMinutes = Math.floor(process.uptime() / 60);
   const dbCheck = await checkDatabaseConnection();
+  let isLoggedIn = false;
+  let csrfToken: string | undefined;
+
+  try {
+    const auth = await getCurrentSession();
+    if (auth) {
+      isLoggedIn = true;
+      csrfToken = auth.session.csrfToken;
+    }
+  } catch {
+    // Non-fatal
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader currentPath="/health" />
+      <PublicHeader currentPath="/health" isLoggedIn={isLoggedIn} csrfToken={csrfToken} />
 
       <main className="flex-1 mx-auto max-w-4xl px-4 py-10 sm:px-6 w-full">
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs">

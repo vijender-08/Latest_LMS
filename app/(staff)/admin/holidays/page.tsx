@@ -35,7 +35,7 @@ export default async function AdminHolidaysPage() {
         title="Holiday & Academic Calendar"
         description="Upload annual holiday schedule, declare emergency or ad-hoc college-off days, and enforce automatic fine exemptions."
         badge="Academic Calendar"
-        badgeColor="purple"
+        badgeColor="indigo"
         breadcrumbs={[{ label: "Admin Portal", href: "/admin" }, { label: "Holiday Calendar" }]}
         actions={
           <div className="flex items-center gap-2">

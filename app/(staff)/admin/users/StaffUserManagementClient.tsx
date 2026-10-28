@@ -312,7 +312,7 @@ export function StaffUserManagementClient({
                       <span
                         className={`inline-flex rounded px-2 py-0.5 text-xs font-semibold ${
                           user.roleCode === "SUPER_ADMIN"
-                            ? "bg-purple-100 text-purple-800"
+                            ? "bg-indigo-900 text-white"
                             : user.roleCode === "LIBRARY_ADMIN"
                               ? "bg-indigo-100 text-indigo-800"
                               : user.roleCode === "LIBRARIAN"

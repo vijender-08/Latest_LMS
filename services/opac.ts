@@ -696,6 +696,11 @@ export interface PatronAccountData {
     mustChangePassword: boolean;
     email: string | null;
     mobile: string | null;
+    fatherName?: string | null;
+    academicYear?: number | null;
+    semester?: number | null;
+    admissionDate?: string | null;
+    courseName?: string | null;
   };
   currentLoans: {
     id: number;
@@ -774,10 +779,16 @@ export async function getPatronAccountData(
       mustChangePassword: schema.patrons.mustChangePassword,
       email: schema.patrons.email,
       mobile: schema.patrons.mobile,
+      fatherName: schema.patrons.fatherName,
+      academicYear: schema.patrons.academicYear,
+      semester: schema.patrons.semester,
+      admissionDate: schema.patrons.admissionDate,
+      courseName: schema.courses.name,
     })
     .from(schema.patrons)
     .innerJoin(schema.patronCategories, eq(schema.patrons.categoryId, schema.patronCategories.id))
     .leftJoin(schema.departments, eq(schema.patrons.departmentId, schema.departments.id))
+    .leftJoin(schema.courses, eq(schema.patrons.courseId, schema.courses.id))
     .leftJoin(schema.institutions, eq(schema.patrons.institutionId, schema.institutions.id))
     .leftJoin(schema.libraries, eq(schema.patrons.libraryId, schema.libraries.id))
     .where(eq(schema.patrons.id, patronId))
@@ -938,6 +949,11 @@ export async function getPatronAccountData(
       mustChangePassword: Boolean(p.mustChangePassword),
       email: p.email,
       mobile: p.mobile,
+      fatherName: p.fatherName,
+      academicYear: p.academicYear,
+      semester: p.semester,
+      admissionDate: p.admissionDate ? String(p.admissionDate) : null,
+      courseName: p.courseName,
     },
     currentLoans,
     loanHistory,

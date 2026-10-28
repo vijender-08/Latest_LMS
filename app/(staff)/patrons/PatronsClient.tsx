@@ -22,7 +22,12 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { generateCode128Svg } from "@/lib/barcode";
-import { formatDate } from "@/lib/utils";
+import {
+  LibraryCardModal,
+  type LibraryCardData,
+  derivePatronBatch,
+} from "@/components/patrons/LibraryCard";
+import { formatDate, getCollegeDropdownLabel } from "@/lib/utils";
 import { PATRON_STATUSES, type PatronStatus, type PatronType } from "@/lib/validations/patron";
 
 export interface PatronListItem {
@@ -47,6 +52,8 @@ export interface PatronListItem {
   academicYear?: number | null;
   semester?: number | null;
   section?: string | null;
+  fatherName?: string | null;
+  admissionDate?: string | null;
   email: string | null;
   mobile: string | null;
   employeeId: string | null;
@@ -76,6 +83,7 @@ interface PatronsClientProps {
   selectedLibraryId?: number | null;
   isSuperAdmin?: boolean;
   autoOpenAddPatron?: boolean;
+  initialCardsParam?: string;
   csrfToken: string;
   canManage: boolean;
 }
@@ -91,6 +99,7 @@ export function PatronsClient({
   selectedLibraryId,
   isSuperAdmin,
   autoOpenAddPatron,
+  initialCardsParam,
   csrfToken,
   canManage,
 }: PatronsClientProps) {
@@ -142,6 +151,73 @@ export function PatronsClient({
       setShowRegisterModal(true);
     }
   }, [autoOpenAddPatron, canManage]);
+
+  // Library Card Print Modal State
+  const [cardsModal, setCardsModal] = useState<{
+    open: boolean;
+    cards: LibraryCardData[];
+    title?: string;
+  }>({ open: false, cards: [] });
+
+  // Auto-open Library Cards if requested via URL (?cards=...)
+  useEffect(() => {
+    if (initialCardsParam) {
+      const cardNumbers = initialCardsParam
+        .split(",")
+        .map((c) => c.trim().toUpperCase())
+        .filter(Boolean);
+      if (cardNumbers.length > 0) {
+        const matched = initialPatrons.filter((p) => cardNumbers.includes(p.cardNo.toUpperCase()));
+        if (matched.length > 0) {
+          setCardsModal({
+            open: true,
+            title: `Batch Import — Generated Library Cards (${matched.length})`,
+            cards: matched.map((p) => ({
+              cardNo: p.cardNo,
+              name: p.fullName,
+              fatherName: p.fatherName,
+              department: p.departmentName || p.departmentCode,
+              mobile: p.mobile,
+              batch: derivePatronBatch(p),
+              libraryName: p.libraryName,
+              institutionName: p.institutionName,
+              courseName: p.courseName,
+              cardExpiry: p.cardExpiry,
+              patronType: p.patronType,
+              academicYear: p.academicYear,
+              semester: p.semester,
+              admissionDate: p.admissionDate,
+            })),
+          });
+        }
+      }
+    }
+  }, [initialCardsParam, initialPatrons]);
+
+  const openCardForPatron = (patron: PatronListItem) => {
+    setCardsModal({
+      open: true,
+      title: `Library Card — ${patron.fullName}`,
+      cards: [
+        {
+          cardNo: patron.cardNo,
+          name: patron.fullName,
+          fatherName: patron.fatherName,
+          department: patron.departmentName || patron.departmentCode,
+          mobile: patron.mobile,
+          batch: derivePatronBatch(patron),
+          libraryName: patron.libraryName,
+          institutionName: patron.institutionName,
+          courseName: patron.courseName,
+          cardExpiry: patron.cardExpiry,
+          patronType: patron.patronType,
+          academicYear: patron.academicYear,
+          semester: patron.semester,
+          admissionDate: patron.admissionDate,
+        },
+      ],
+    });
+  };
 
   // Profile Inspector Modal state
   const [selectedPatronId, setSelectedPatronId] = useState<number | null>(null);
@@ -561,10 +637,10 @@ export function PatronsClient({
 
       {/* Super Admin Multi-Library Toggle Pills */}
       {isSuperAdmin && libraries && libraries.length > 0 && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-purple-50/50 border border-purple-200 rounded-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-indigo-50/50 border border-indigo-200 rounded-xl">
           <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-purple-600 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-wider text-purple-900">
+            <span className="flex h-2.5 w-2.5 rounded-full bg-indigo-600 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-950">
               Filter by Library Branch:
             </span>
           </div>
@@ -574,7 +650,7 @@ export function PatronsClient({
               onClick={() => router.push("/patrons")}
               className={`px-3 py-1.5 text-xs font-bold rounded-lg transition border flex items-center gap-1.5 ${
                 !selectedLibraryId
-                  ? "bg-purple-900 text-white border-purple-900 shadow-xs"
+                  ? "bg-indigo-900 text-white border-indigo-950 shadow-xs"
                   : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
               }`}
             >
@@ -810,6 +886,40 @@ export function PatronsClient({
               {filtered.length} of {initialPatrons.length}
             </span>
 
+            {filtered.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setCardsModal({
+                    open: true,
+                    title: `Library Cards (${filtered.length} Patrons)`,
+                    cards: filtered.map((p) => ({
+                      cardNo: p.cardNo,
+                      name: p.fullName,
+                      fatherName: p.fatherName,
+                      department: p.departmentName || p.departmentCode,
+                      mobile: p.mobile,
+                      batch: derivePatronBatch(p),
+                      libraryName: p.libraryName,
+                      institutionName: p.institutionName,
+                      courseName: p.courseName,
+                      cardExpiry: p.cardExpiry,
+                      patronType: p.patronType,
+                      academicYear: p.academicYear,
+                      semester: p.semester,
+                      admissionDate: p.admissionDate,
+                    })),
+                  })
+                }
+                title="Generate and print official library cards for all current filtered students"
+                className="border-blue-300 bg-blue-50/70 text-blue-900 hover:bg-blue-100 font-bold inline-flex items-center gap-1.5"
+              >
+                <span>🪪</span>
+                <span>Print Cards ({filtered.length})</span>
+              </Button>
+            )}
+
             {canManage && (
               <Button variant="primary" size="sm" onClick={() => setShowRegisterModal(true)}>
                 + Register Patron
@@ -966,11 +1076,22 @@ export function PatronsClient({
                                         >
                                           Profile
                                         </Button>
+                                        <Button
+                                          variant="secondary"
+                                          size="sm"
+                                          onClick={() => openCardForPatron(patron)}
+                                          title="Generate and print library card"
+                                          className="border-blue-200 text-blue-900 hover:bg-blue-50 font-semibold"
+                                        >
+                                          🪪 Card
+                                        </Button>
                                         {canManage && (
                                           <Button
                                             variant="danger"
                                             size="sm"
-                                            onClick={() => setDeleteModal({ open: true, patron, force: false })}
+                                            onClick={() =>
+                                              setDeleteModal({ open: true, patron, force: false })
+                                            }
                                             title="Delete this patron record"
                                           >
                                             Delete
@@ -1074,6 +1195,15 @@ export function PatronsClient({
                         >
                           Profile
                         </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => openCardForPatron(patron)}
+                          title="Generate and print library card"
+                          className="border-blue-200 text-blue-900 hover:bg-blue-50 font-semibold"
+                        >
+                          🪪 Card
+                        </Button>
                         {canManage && (
                           <Button
                             variant="danger"
@@ -1154,7 +1284,7 @@ export function PatronsClient({
                     onChange={(e) => setNewPatron({ ...newPatron, institutionId: e.target.value })}
                     options={institutions.map((i) => ({
                       value: String(i.id),
-                      label: `${i.name} (${i.code})`,
+                      label: getCollegeDropdownLabel(i),
                     }))}
                     required
                   />
@@ -1340,6 +1470,40 @@ export function PatronsClient({
                 </button>
                 <button
                   type="button"
+                  onClick={() => {
+                    const p = profileDetail.patron;
+                    const fullName =
+                      `${p.firstName} ${p.middleName ? `${p.middleName} ` : ""}${p.lastName || ""}`.trim();
+                    setCardsModal({
+                      open: true,
+                      title: `Library Card — ${fullName}`,
+                      cards: [
+                        {
+                          cardNo: p.cardNo,
+                          name: fullName,
+                          fatherName: p.fatherName,
+                          department: p.departmentName,
+                          mobile: p.mobile,
+                          batch: derivePatronBatch(p),
+                          libraryName: p.libraryName,
+                          institutionName: p.institutionName,
+                          courseName: p.courseName,
+                          cardExpiry: p.cardExpiry,
+                          patronType: p.patronType,
+                          academicYear: p.academicYear,
+                          semester: p.semester,
+                          admissionDate: p.admissionDate,
+                        },
+                      ],
+                    });
+                  }}
+                  className="rounded bg-blue-900 px-3 py-1 text-xs font-bold text-white hover:bg-blue-800 transition inline-flex items-center space-x-1"
+                >
+                  <span>🪪</span>
+                  <span>Print Library Card</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => setProfileDetail(null)}
                   className="text-slate-400 hover:text-slate-600 font-bold"
                 >
@@ -1482,10 +1646,14 @@ export function PatronsClient({
                     variant="danger"
                     size="sm"
                     onClick={() => {
-                      const targetPatron = initialPatrons.find((p) => p.id === profileDetail.patron.id) || {
+                      const targetPatron = initialPatrons.find(
+                        (p) => p.id === profileDetail.patron.id,
+                      ) || {
                         id: profileDetail.patron.id,
                         cardNo: profileDetail.patron.cardNo,
-                        fullName: [profileDetail.patron.firstName, profileDetail.patron.lastName].filter(Boolean).join(" "),
+                        fullName: [profileDetail.patron.firstName, profileDetail.patron.lastName]
+                          .filter(Boolean)
+                          .join(" "),
                         patronType: profileDetail.patron.patronType,
                         categoryId: profileDetail.patron.categoryId,
                         categoryName: profileDetail.patron.categoryName,
@@ -1568,16 +1736,24 @@ export function PatronsClient({
                 </h3>
                 <p className="mt-1 text-xs text-slate-500 leading-relaxed">
                   Are you sure you want to permanently delete{" "}
-                  <strong className="text-slate-900">{deleteModal.patron.fullName}</strong>{" "}
-                  (Card: <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">{deleteModal.patron.cardNo}</code>
-                  {deleteModal.patron.employeeId ? `, Emp ID: ${deleteModal.patron.employeeId}` : ""})?
+                  <strong className="text-slate-900">{deleteModal.patron.fullName}</strong> (Card:{" "}
+                  <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">
+                    {deleteModal.patron.cardNo}
+                  </code>
+                  {deleteModal.patron.employeeId
+                    ? `, Emp ID: ${deleteModal.patron.employeeId}`
+                    : ""}
+                  )?
                 </p>
               </div>
             </div>
 
             <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800 space-y-1.5">
               <p className="font-semibold text-amber-900">Irreversible Action</p>
-              <p>This will remove this record, login credentials, and session entries from the library management database.</p>
+              <p>
+                This will remove this record, login credentials, and session entries from the
+                library management database.
+              </p>
               <label className="flex items-center gap-2 pt-1 font-medium text-amber-950 cursor-pointer">
                 <input
                   type="checkbox"
@@ -1590,24 +1766,24 @@ export function PatronsClient({
             </div>
 
             <div className="flex justify-end gap-2 border-t border-slate-100 pt-3">
-              <Button
-                variant="outline"
-                onClick={() => setDeleteModal(null)}
-                disabled={isDeleting}
-              >
+              <Button variant="outline" onClick={() => setDeleteModal(null)} disabled={isDeleting}>
                 Cancel
               </Button>
-              <Button
-                variant="danger"
-                onClick={handleDeletePatron}
-                isLoading={isDeleting}
-              >
+              <Button variant="danger" onClick={handleDeletePatron} isLoading={isDeleting}>
                 Yes, Delete Record
               </Button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Printable Library Card Modal */}
+      <LibraryCardModal
+        open={cardsModal.open}
+        cards={cardsModal.cards}
+        title={cardsModal.title}
+        onClose={() => setCardsModal({ open: false, cards: [] })}
+      />
     </div>
   );
 }

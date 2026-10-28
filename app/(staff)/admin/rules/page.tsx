@@ -101,7 +101,7 @@ export default async function AdminRulesPage() {
                   </td>
                   <td className="px-6 py-3.5">
                     {r.itemTypeId ? (
-                      <span className="inline-flex rounded-md bg-purple-50 px-2 py-0.5 text-xs font-medium text-purple-700">
+                      <span className="inline-flex rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
                         {itemTypeMap.get(r.itemTypeId) ?? `Item #${r.itemTypeId}`}
                       </span>
                     ) : (

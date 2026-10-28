@@ -59,7 +59,7 @@ export default async function AdminUsersPage() {
       <div className="mb-6 flex flex-col justify-between gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="rounded bg-purple-100 px-2.5 py-0.5 text-xs font-bold text-purple-900 uppercase tracking-wide">
+            <span className="rounded bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-900 uppercase tracking-wide">
               Super Admin Area
             </span>
             <span className="text-xs text-slate-500">FR-AU-04 &bull; UC-11</span>

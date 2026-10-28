@@ -304,7 +304,7 @@ export function BatchManagementClient({
                                 ? "bg-blue-100 text-blue-800"
                                 : isFaculty
                                   ? "bg-amber-100 text-amber-800"
-                                  : "bg-purple-100 text-purple-800"
+                                  : "bg-indigo-100 text-indigo-800"
                             }`}
                           >
                             {b.importType}

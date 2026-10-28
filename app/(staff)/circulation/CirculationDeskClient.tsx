@@ -15,7 +15,7 @@ import {
   TableHeaderCell,
   TableRow,
 } from "@/components/ui/Table";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getCollegeDropdownLabel } from "@/lib/utils";
 import type {
   CirculationBookSearchResult,
   CirculationPatronSearchResult,
@@ -868,7 +868,7 @@ export function CirculationDeskClient({
                         <option value="">All Colleges / Campuses</option>
                         {institutionsList.map((inst) => (
                           <option key={inst.id} value={inst.id}>
-                            {inst.name} ({inst.code})
+                            {getCollegeDropdownLabel(inst)}
                           </option>
                         ))}
                       </select>
@@ -1246,7 +1246,7 @@ export function CirculationDeskClient({
                       <option value="">All Colleges / Campuses</option>
                       {institutionsList.map((inst) => (
                         <option key={inst.id} value={inst.id}>
-                          {inst.name} ({inst.code})
+                          {getCollegeDropdownLabel(inst)}
                         </option>
                       ))}
                     </select>
@@ -1546,9 +1546,7 @@ export function CirculationDeskClient({
                       </div>
                       <span
                         className={`flex-shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                          isOverdue
-                            ? "bg-red-100 text-red-800"
-                            : "bg-emerald-100 text-emerald-800"
+                          isOverdue ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"
                         }`}
                       >
                         {isOverdue ? "OVERDUE" : item.status}

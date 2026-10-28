@@ -9,12 +9,7 @@ import {
   getCachedPatronCategories,
   getCachedPatronList,
 } from "@/lib/master-data-cache";
-import {
-  type CategoryOption,
-  type MasterOption,
-  type PatronListItem,
-  PatronsClient,
-} from "./PatronsClient";
+import { type CategoryOption, type MasterOption, PatronsClient } from "./PatronsClient";
 
 export const metadata = {
   title: "Patron Roster — RBMI LMS",
@@ -22,7 +17,7 @@ export const metadata = {
 };
 
 interface PatronsPageProps {
-  searchParams?: Promise<{ libraryId?: string; addPatron?: string }>;
+  searchParams?: Promise<{ libraryId?: string; addPatron?: string; cards?: string }>;
 }
 
 export default async function PatronsPage({ searchParams }: PatronsPageProps) {
@@ -69,7 +64,9 @@ export default async function PatronsPage({ searchParams }: PatronsPageProps) {
     getCachedLibraries(),
   ]);
 
-  const currentLibrary = targetLibraryId ? libraries.find((l) => l.id === targetLibraryId) : undefined;
+  const currentLibrary = targetLibraryId
+    ? libraries.find((l) => l.id === targetLibraryId)
+    : undefined;
 
   return (
     <div className="space-y-6">
@@ -96,6 +93,7 @@ export default async function PatronsPage({ searchParams }: PatronsPageProps) {
         selectedLibraryId={targetLibraryId}
         isSuperAdmin={isSuperAdmin}
         autoOpenAddPatron={sp.addPatron === "true"}
+        initialCardsParam={sp.cards}
         csrfToken={staffContext.session.csrfToken}
         canManage={permissions.includes("PATRON_MANAGE")}
       />

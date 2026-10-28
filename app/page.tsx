@@ -1,10 +1,24 @@
 import Link from "next/link";
 import { PublicFooter, PublicHeader } from "@/components/layout/PublicHeader";
+import { getCurrentSession } from "@/lib/auth";
 
-export default function HomePage() {
+export default async function HomePage() {
+  let isLoggedIn = false;
+  let csrfToken: string | undefined;
+
+  try {
+    const auth = await getCurrentSession();
+    if (auth) {
+      isLoggedIn = true;
+      csrfToken = auth.session.csrfToken;
+    }
+  } catch {
+    // Non-fatal
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      <PublicHeader currentPath="/" />
+      <PublicHeader currentPath="/" isLoggedIn={isLoggedIn} csrfToken={csrfToken} />
 
       <main className="flex-1 mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-10 w-full">
         <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-8 shadow-xs">
